@@ -1,0 +1,53 @@
+HR Platform AI Enhancements Roadmap
+
+1. HR Copilot Assistant
+Objective: Create a unified conversational assistant embedded inside the HR Admin and employee portals.
+
+Key capabilities
+- Verified policy Q&A referencing HR handbooks and regional compliance libraries.
+- Natural-language workflow execution (apply leave, view attendance records, download latest payslip).
+- Guided writing tools for employees and managers (leave justification templates, profile refresh prompts, quarterly performance narratives).
+Implementation considerations
+- Retrieval-augmented generation over policy, workflow metadata, and knowledge base.
+- Authorization-aware action layer to trigger workflows via service APIs.
+
+2. Workforce Intelligence & Predictive Dashboards
+Purpose: Provide forward-looking staffing and payroll insights to HR leaders.
+
+Deliverables
+- Attrition probability per employee and team with explainable drivers.
+- Absenteeism forecasts and staffing shortage alerts mapped to shift schedules.
+- Project workload versus manpower conflict detection with suggested redeployments.
+- Monthly payroll and benefits forecasting tied to hiring pipeline and overtime trends.
+
+3. Recruitment & Candidate Screening Automation
+Scope
+- Resume parsing and ranking: extract experience, skill, and education entities; score against job competency matrices.
+- Job description generator: produce role-specific JD drafts optimized for SEO and DEI metrics.
+- Candidate-job matching engine using embeddings over skills, certifications, and tenure.
+- Interview question generator for technical, behavioral, and culture-fit tracks.
+- AI interviewer chatbot for pre-screening and consistency scoring.
+
+4. Employee Lifecycle Automation
+Deliverables
+- HR knowledge assistant for routine inquiries (leave, salary slips, attendance adjustments).
+- Smart onboarding checklists auto-generated per role, location, and manager.
+- Performance review assistant that aggregates KPIs, OKRs, 1:1 notes, and attendance for draft evaluations.
+- Policy and document semantic search with conversational follow-ups.
+
+5. Reporting & Insight Generation
+Deliverables
+- Automated report builder: HR manager describes the report; system assembles visuals and narrative in the required format.
+- Natural language analytics: conversational SQL/NLQ for prompts such as “Who has less than 80% attendance in the last 90 days?”
+- Predictive KPI dashboards forecasting turnover, hiring velocity, training throughput, and compliance risks.
+
+6. Training & Skill Development Intelligence
+Deliverables
+- Skill-gap analysis combining job requirements, performance data, and learning history.
+- Personalized learning paths recommending internal courses, external MOOCs, and mentorship pairings.
+- Training effectiveness predictor estimating uplift probability before enrollment and feeding L&D ROI dashboards.
+
+Next Steps
+- Prioritize the initiatives based on business OKRs and implementation feasibility.
+- Define data availability, privacy constraints, and MLOps requirements for each workstream.
+- Create phased timelines (pilot, beta, production) with measurable success metrics and stakeholder owners.
