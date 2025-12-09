@@ -33,6 +33,9 @@ import {
 } from "@/server/modules/hr/utils";
 import { addHours, createRandomToken, hashToken } from "@/server/utils/token";
 import { DEFAULT_ORGANIZATION_LOGO } from "@/lib/organization-branding";
+const SUBDOMAIN_PATTERN = /^[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/;
+
+const normalizeSubDomain = (value: string) => value.trim().toLowerCase();
 
 const buildDisplayName = (
   profile: {
@@ -58,6 +61,7 @@ const buildDisplayName = (
 const mapOrganizationRecord = (record: {
   id: string;
   name: string;
+  subDomain: string;
   domain: string | null;
   timezone: string | null;
   locale: string | null;
@@ -68,6 +72,7 @@ const mapOrganizationRecord = (record: {
 }) => ({
   id: record.id,
   name: record.name,
+  subDomain: record.subDomain,
   domain: record.domain,
   timezone: record.timezone,
   locale: record.locale,
@@ -94,6 +99,12 @@ const handlePrismaError = (error: unknown): never => {
       throw new TRPCError({
         code: "CONFLICT",
         message: "That organization domain is already in use.",
+      });
+    }
+    if (target?.includes("subDomain")) {
+      throw new TRPCError({
+        code: "CONFLICT",
+        message: "That sub-domain is already in use.",
       });
     }
     if (target?.includes("email")) {
@@ -158,6 +169,7 @@ export const hrOrganizationService = {
         select: {
           id: true,
           name: true,
+          subDomain: true,
           domain: true,
           timezone: true,
           locale: true,
@@ -257,6 +269,7 @@ export const hrOrganizationService = {
       select: {
         id: true,
         name: true,
+        subDomain: true,
         domain: true,
         timezone: true,
         locale: true,
@@ -345,6 +358,7 @@ export const hrOrganizationService = {
         select: {
           id: true,
           name: true,
+          subDomain: true,
           domain: true,
           timezone: true,
           locale: true,
@@ -439,6 +453,7 @@ export const hrOrganizationService = {
     ctx: TRPCContext,
     input: {
       name: string;
+      subDomain: string;
       domain?: string | null;
       timezone?: string | null;
       locale?: string | null;
@@ -460,11 +475,18 @@ export const hrOrganizationService = {
       });
     }
 
-    const existingCount = await ctx.prisma.organization.count();
-    if (existingCount > 0) {
+    const normalizedSubDomain = normalizeSubDomain(input.subDomain ?? "");
+    if (normalizedSubDomain.length < 3 || normalizedSubDomain.length > 63) {
       throw new TRPCError({
-        code: "FORBIDDEN",
-        message: "Only one organization can exist at a time.",
+        code: "BAD_REQUEST",
+        message: "Sub-domain must be between 3 and 63 characters.",
+      });
+    }
+    if (!SUBDOMAIN_PATTERN.test(normalizedSubDomain)) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message:
+          "Sub-domain can only include lowercase letters, numbers, and hyphens, and cannot start or end with a hyphen.",
       });
     }
 
@@ -475,6 +497,18 @@ export const hrOrganizationService = {
     const locale = sanitizeOptional(input.locale) ?? "en-US";
     const domain = sanitizeOptional(input.domain)?.toLowerCase() ?? null;
     const logoUrl = sanitizeOptional(input.logoUrl) ?? DEFAULT_ORGANIZATION_LOGO;
+
+    const existingSubDomain = await ctx.prisma.organization.findUnique({
+      where: { subDomain: normalizedSubDomain },
+      select: { id: true },
+    });
+
+    if (existingSubDomain) {
+      throw new TRPCError({
+        code: "CONFLICT",
+        message: "That sub-domain is already in use.",
+      });
+    }
 
     const existingUser = await ctx.prisma.user.findUnique({
       where: { email: normalizedEmail },
@@ -497,6 +531,7 @@ export const hrOrganizationService = {
         const organization = await tx.organization.create({
           data: {
             name: organizationName,
+            subDomain: normalizedSubDomain,
             domain,
             timezone,
             locale,
@@ -570,7 +605,11 @@ export const hrOrganizationService = {
         };
       });
 
-      const inviteLink = buildInviteLink(creation.rawToken, normalizedEmail);
+      const inviteLink = buildInviteLink(
+        creation.organization.subDomain,
+        creation.rawToken,
+        normalizedEmail,
+      );
       let invitationSent = false;
 
       if (input.sendInvite ?? true) {
@@ -600,6 +639,7 @@ export const hrOrganizationService = {
       return {
         organizationId: creation.organization.id,
         organizationName,
+        organizationSubDomain: creation.organization.subDomain,
         ownerId: creation.owner.id,
         ownerEmail: normalizedEmail,
         inviteUrl: inviteLink,
@@ -647,6 +687,33 @@ export const hrOrganizationService = {
 
     await ctx.prisma.$transaction(async (tx) => {
       const organizationId = input.organizationId;
+
+      // Remove nested records that do not automatically cascade on organization delete.
+      await tx.threadParticipant.deleteMany({
+        where: { thread: { organizationId } },
+      });
+      await tx.chatMessage.deleteMany({
+        where: { thread: { organizationId } },
+      });
+      await tx.notificationReceipt.deleteMany({
+        where: { notification: { organizationId } },
+      });
+      await tx.dailyReportEntry.deleteMany({
+        where: { report: { organizationId } },
+      });
+      await tx.monthlyReportEntry.deleteMany({
+        where: { report: { organizationId } },
+      });
+      await tx.invoiceItem.deleteMany({
+        where: { invoice: { organizationId } },
+      });
+      await tx.teamLead.deleteMany({
+        where: { team: { organizationId } },
+      });
+      await tx.teamManager.deleteMany({
+        where: { team: { organizationId } },
+      });
+
       await tx.thread.deleteMany({ where: { organizationId } });
       await tx.notification.deleteMany({ where: { organizationId } });
       await tx.dailyReport.deleteMany({ where: { organizationId } });

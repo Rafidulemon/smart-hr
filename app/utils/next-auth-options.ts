@@ -62,12 +62,14 @@ export const nextAuthOptions: NextAuthOptions = {
           email: userRecord.email,
           role: userRecord.role,
           name: displayName,
+          organizationId: userRecord.organizationId,
+          organizationSubDomain: userRecord.organization?.subDomain ?? null,
         };
       },
     }),
   ],
   pages: {
-    signIn: "/auth/login",
+    signIn: "/auth/super_admin",
   },
   session: {
     strategy: "jwt",
@@ -82,13 +84,36 @@ export const nextAuthOptions: NextAuthOptions = {
         if (token.role && typeof token.role === "string") {
           session.user.role = token.role;
         }
+        if (typeof token.organizationId === "string") {
+          session.user.organizationId = token.organizationId;
+        } else {
+          session.user.organizationId = token.organizationId ?? null;
+        }
+        if (typeof token.organizationSubDomain === "string") {
+          session.user.organizationSubDomain = token.organizationSubDomain;
+        } else {
+          session.user.organizationSubDomain = token.organizationSubDomain ?? null;
+        }
       }
 
       return session;
     },
     async jwt({ token, user }) {
-      if (user && "role" in user && typeof user.role === "string") {
-        token.role = user.role;
+      if (user && typeof user === "object") {
+        if ("role" in user && typeof user.role === "string") {
+          token.role = user.role;
+        }
+
+        if ("organizationId" in user) {
+          token.organizationId =
+            typeof user.organizationId === "string" ? user.organizationId : null;
+        }
+        if ("organizationSubDomain" in user) {
+          token.organizationSubDomain =
+            typeof user.organizationSubDomain === "string"
+              ? user.organizationSubDomain
+              : null;
+        }
       }
 
       return token;

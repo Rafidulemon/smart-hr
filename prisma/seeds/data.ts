@@ -3,6 +3,7 @@ import type { Gender, UserRole, WorkModel } from "@prisma/client";
 export type SeedOrganization = {
   id: string;
   name: string;
+  subDomain: string;
   domain: string;
   timezone: string;
   locale: string;
@@ -50,6 +51,7 @@ export const organizations: SeedOrganization[] = [
   {
     id: SMART_HR_ORG_ID,
     name: "Smart HR Labs",
+    subDomain: "smart-hr-labs",
     domain: "smart-hr.app",
     timezone: "Asia/Dhaka",
     locale: "en-US",

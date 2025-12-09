@@ -17,6 +17,7 @@ export const canManageOrganization = (
 export type HrOrganizationDetails = {
   id: string;
   name: string;
+  subDomain: string;
   domain: string | null;
   timezone: string | null;
   locale: string | null;
@@ -55,6 +56,7 @@ export type HrOrganizationManagementResponse = {
 export type HrCreateOrganizationResponse = {
   organizationId: string;
   organizationName: string;
+  organizationSubDomain: string;
   ownerId: string;
   ownerEmail: string;
   inviteUrl: string;

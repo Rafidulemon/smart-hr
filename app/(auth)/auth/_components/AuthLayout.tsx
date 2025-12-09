@@ -5,6 +5,7 @@ import { ReactNode } from "react";
 import Button from "@/app/components/atoms/buttons/Button";
 import Text from "@/app/components/atoms/Text/Text";
 import Header from "@/app/components/navigations/Header";
+import { DEFAULT_ORGANIZATION_LOGO } from "@/lib/organization-branding";
 
 type ShowcaseContent = {
   eyebrow: string;
@@ -27,6 +28,10 @@ type AuthLayoutProps = {
   footer?: ReactNode;
   showcase?: Partial<ShowcaseContent>;
   showShowcase?: boolean;
+  tenantBrand?: {
+    name: string;
+    logoUrl?: string | null;
+  };
 };
 
 const defaultShowcase: ShowcaseContent = {
@@ -55,6 +60,7 @@ export default function AuthLayout({
   footer,
   showcase,
   showShowcase = true,
+  tenantBrand,
 }: AuthLayoutProps) {
   const hero: ShowcaseContent = {
     ...defaultShowcase,
@@ -75,7 +81,35 @@ export default function AuthLayout({
       </div>
 
       <div className="fixed left-0 right-0 top-6 z-40 px-6">
-        <Header />
+        {tenantBrand ? (
+          <header className="mx-auto flex w-full max-w-5xl items-center justify-between rounded-3xl border border-white/70 bg-white/90 px-6 py-3 text-slate-900 shadow-xl shadow-slate-200/70 backdrop-blur-lg dark:border-slate-800 dark:bg-slate-900/80 dark:text-slate-100 dark:shadow-slate-950/40">
+            <div className="flex items-center gap-3">
+              <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl shadow-lg shadow-indigo-500/30">
+                <Image
+                  src={tenantBrand.logoUrl || DEFAULT_ORGANIZATION_LOGO}
+                  alt={`${tenantBrand.name} logo`}
+                  width={36}
+                  height={36}
+                  className="h-9 w-9 object-contain"
+                  priority
+                />
+              </span>
+              <div className="flex flex-col">
+                <span className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-500 dark:text-slate-400">
+                  Welcome to
+                </span>
+                <span className="text-base font-semibold leading-tight text-slate-900 dark:text-white">
+                  {tenantBrand.name}
+                </span>
+              </div>
+            </div>
+            <span className="text-sm font-semibold text-slate-500 dark:text-slate-300">
+              Secure login
+            </span>
+          </header>
+        ) : (
+          <Header />
+        )}
       </div>
 
       <div className="relative z-10 flex min-h-screen items-center px-6 pb-12 pt-32 lg:pt-36">

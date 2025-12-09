@@ -33,6 +33,8 @@ import { canManageDepartments } from "@/types/hr-department";
 import { canManageProjects } from "@/types/hr-project";
 import { trpc } from "@/trpc/client";
 import { DEFAULT_ORGANIZATION_LOGO } from "@/lib/organization-branding";
+import { useTenantPaths } from "@/app/components/tenant/TenantProvider";
+import { stripTenantPrefix } from "@/lib/tenant/routing";
 
 type MenuItem = {
   id:
@@ -162,6 +164,8 @@ const HrAdminLeftMenu = ({
   const router = useRouter();
   const pathname = usePathname();
   const currentPath = pathname ?? "/";
+  const { tenantPath, tenantAuthPath } = useTenantPaths();
+  const tenantRelativePath = stripTenantPrefix(currentPath);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [logoutError, setLogoutError] = useState<string | null>(null);
@@ -189,7 +193,7 @@ const HrAdminLeftMenu = ({
 
     try {
       await signOut({ redirect: false });
-      router.push("/auth/login");
+      router.push(tenantAuthPath());
     } catch (error) {
       void error;
       setLogoutError("Failed to log out. Please try again.");
@@ -209,9 +213,15 @@ const HrAdminLeftMenu = ({
   const isRouteActive = (href?: string) => {
     if (!href) return false;
     if (href === "/hr-admin") {
-      return currentPath === "/hr-admin" || currentPath === "/hr-admin/";
+      return (
+        tenantRelativePath === "/hr-admin" ||
+        tenantRelativePath === "/hr-admin/"
+      );
     }
-    return currentPath === href || currentPath.startsWith(`${href}/`);
+    return (
+      tenantRelativePath === href ||
+      tenantRelativePath.startsWith(`${href}/`)
+    );
   };
 
   const containerClasses = [
@@ -284,7 +294,7 @@ const HrAdminLeftMenu = ({
             return (
               <li key={item.id}>
                 <Link
-                  href={item.href ?? "#"}
+                  href={item.href ? tenantPath(item.href) : "#"}
                   className={getNavClasses(isRouteActive(item.href))}
                 >
                   {item.icon}
@@ -302,7 +312,7 @@ const HrAdminLeftMenu = ({
         {showEmployeeDashboardLink && (
           <div className="mt-4 rounded-2xl border border-slate-200/70 bg-slate-50/80 rounded dark:border-slate-700/80 dark:bg-slate-800/60">
             <Link
-              href="/"
+              href={tenantPath("/")}
               target="_blank"
               className={`${getNavClasses(isRouteActive("/"))}`}
             >

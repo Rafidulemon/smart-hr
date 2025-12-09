@@ -12,6 +12,7 @@ export const authUserSelect = {
       id: true,
       name: true,
       domain: true,
+      subDomain: true,
       timezone: true,
       logoUrl: true,
     },

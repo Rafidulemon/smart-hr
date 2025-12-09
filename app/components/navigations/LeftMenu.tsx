@@ -25,6 +25,8 @@ import { FiSettings } from "react-icons/fi";
 import { Modal } from "../atoms/frame/Modal";
 import { trpc } from "@/trpc/client";
 import { DEFAULT_ORGANIZATION_LOGO } from "@/lib/organization-branding";
+import { useTenantPaths } from "@/app/components/tenant/TenantProvider";
+import { stripTenantPrefix } from "@/lib/tenant/routing";
 
 type Props = {
   isLeader?: boolean;
@@ -111,6 +113,8 @@ const LeftMenu = ({
   const router = useRouter();
   const pathname = usePathname();
   const currentPath = pathname ?? "/";
+  const { tenantPath, tenantAuthPath } = useTenantPaths();
+  const tenantRelativePath = stripTenantPrefix(currentPath);
   const unseenNotificationQuery = trpc.notification.unseenCount.useQuery(undefined, {
     refetchOnWindowFocus: true,
     refetchInterval: 10_000,
@@ -127,7 +131,7 @@ const LeftMenu = ({
   };
 
   const [openDropdown, setOpenDropdown] = useState<DropdownKey>(
-    deriveSectionFromPath(currentPath)
+    deriveSectionFromPath(tenantRelativePath)
   );
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
@@ -145,7 +149,7 @@ const LeftMenu = ({
 
     try {
       await signOut({ redirect: false });
-      router.push("/auth/login");
+      router.push(tenantAuthPath());
     } catch (error) {
       void error;
       setLogoutError("Failed to log out. Please try again.");
@@ -165,8 +169,8 @@ const LeftMenu = ({
   useEffect(() => {
     // Keep dropdown state aligned with the current route selection.
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    setOpenDropdown(deriveSectionFromPath(currentPath));
-  }, [currentPath]);
+    setOpenDropdown(deriveSectionFromPath(tenantRelativePath));
+  }, [tenantRelativePath]);
 
   const profileDropdownOpen = openDropdown === "profile";
   const leaveDropdownOpen = openDropdown === "leave";
@@ -195,9 +199,11 @@ const LeftMenu = ({
 
   const isRouteActive = (href: string) => {
     if (href === "/") {
-      return currentPath === "/";
+      return tenantRelativePath === "/";
     }
-    return currentPath === href || currentPath.startsWith(`${href}/`);
+    return (
+      tenantRelativePath === href || tenantRelativePath.startsWith(`${href}/`)
+    );
   };
 
   const containerClasses = [
@@ -241,7 +247,9 @@ const LeftMenu = ({
                 <div>
                   <button
                     onClick={() => toggleDropdown("profile")}
-                    className={getNavClasses(currentPath.startsWith("/profile"))}
+                    className={getNavClasses(
+                      tenantRelativePath.startsWith("/profile")
+                    )}
                   >
                     {item.icon}
                     <span className="text-[16px] font-semibold">
@@ -258,8 +266,8 @@ const LeftMenu = ({
                     <ul className="mt-2 space-y-2 pl-4">
                       <li>
                         <Link
-                          href="/profile"
-                          className={getSubNavClasses(currentPath === "/profile")}
+                          href={tenantPath("/profile")}
+                          className={getSubNavClasses(tenantRelativePath === "/profile")}
                         >
                           <FaEye />
                           <span className="text-[14px] font-medium">
@@ -269,9 +277,9 @@ const LeftMenu = ({
                       </li>
                       <li>
                         <Link
-                          href="/profile/edit"
+                          href={tenantPath("/profile/edit")}
                           className={getSubNavClasses(
-                            currentPath === "/profile/edit"
+                            tenantRelativePath === "/profile/edit"
                           )}
                         >
                           <FaEdit />
@@ -287,7 +295,9 @@ const LeftMenu = ({
                 <div>
                   <button
                     onClick={() => toggleDropdown("leave")}
-                    className={getNavClasses(currentPath.startsWith("/leave"))}
+                    className={getNavClasses(
+                      tenantRelativePath.startsWith("/leave")
+                    )}
                   >
                     {item.icon}
                     <span className="text-[16px] font-semibold">
@@ -304,8 +314,8 @@ const LeftMenu = ({
                     <ul className="mt-2 space-y-2 pl-4">
                       <li>
                         <Link
-                          href="/leave"
-                          className={getSubNavClasses(currentPath === "/leave")}
+                          href={tenantPath("/leave")}
+                          className={getSubNavClasses(tenantRelativePath === "/leave")}
                         >
                           <HiOutlineDocumentText />
                           <span className="text-[14px] font-medium">
@@ -315,9 +325,9 @@ const LeftMenu = ({
                       </li>
                       <li>
                         <Link
-                          href="/leave/application"
+                          href={tenantPath("/leave/application")}
                           className={getSubNavClasses(
-                            currentPath === "/leave/application"
+                            tenantRelativePath === "/leave/application"
                           )}
                         >
                           <IoIosPaper />
@@ -331,7 +341,7 @@ const LeftMenu = ({
                 </div>
               ) : item.label === "Notification" ? (
                 <Link
-                  href={item.href}
+                  href={tenantPath(item.href)}
                   className={getNavClasses(isRouteActive("/notification"))}
                 >
                   {item.icon}
@@ -346,7 +356,7 @@ const LeftMenu = ({
                 </Link>
               ) : item.label === "Invoice" ? (
                 <Link
-                  href={item.href}
+                  href={tenantPath(item.href)}
                   className={getNavClasses(isRouteActive("/invoice"))}
                 >
                   {item.icon}
@@ -359,7 +369,7 @@ const LeftMenu = ({
                   <button
                     onClick={() => toggleDropdown("daily")}
                     className={getNavClasses(
-                      currentPath.startsWith("/report/daily")
+                      tenantRelativePath.startsWith("/report/daily")
                     )}
                   >
                     {item.icon}
@@ -377,9 +387,9 @@ const LeftMenu = ({
                     <ul className="mt-2 space-y-2 pl-4">
                       <li>
                         <Link
-                          href="/report/daily/history"
+                          href={tenantPath("/report/daily/history")}
                           className={getSubNavClasses(
-                            currentPath === "/report/daily/history"
+                            tenantRelativePath === "/report/daily/history"
                           )}
                         >
                           <HiOutlineDocumentText />
@@ -390,9 +400,9 @@ const LeftMenu = ({
                       </li>
                       <li>
                         <Link
-                          href="/report/daily"
+                          href={tenantPath("/report/daily")}
                           className={getSubNavClasses(
-                            currentPath === "/report/daily"
+                            tenantRelativePath === "/report/daily"
                           )}
                         >
                           <IoIosPaper />
@@ -409,7 +419,7 @@ const LeftMenu = ({
                   <button
                     onClick={() => toggleDropdown("monthly")}
                     className={getNavClasses(
-                      currentPath.startsWith("/report/monthly")
+                      tenantRelativePath.startsWith("/report/monthly")
                     )}
                   >
                     {item.icon}
@@ -427,9 +437,9 @@ const LeftMenu = ({
                     <ul className="mt-2 space-y-2 pl-4">
                       <li>
                         <Link
-                          href="/report/monthly/history"
+                          href={tenantPath("/report/monthly/history")}
                           className={getSubNavClasses(
-                            currentPath === "/report/monthly/history"
+                            tenantRelativePath === "/report/monthly/history"
                           )}
                         >
                           <HiOutlineDocumentText />
@@ -440,9 +450,9 @@ const LeftMenu = ({
                       </li>
                       <li>
                         <Link
-                          href="/report/monthly"
+                          href={tenantPath("/report/monthly")}
                           className={getSubNavClasses(
-                            currentPath === "/report/monthly"
+                            tenantRelativePath === "/report/monthly"
                           )}
                         >
                           <IoIosPaper />
@@ -456,7 +466,7 @@ const LeftMenu = ({
                 </div>
               ) : (
                 <Link
-                  href={item.href}
+                  href={tenantPath(item.href)}
                   className={getNavClasses(isRouteActive(item.href))}
                 >
                   {item.icon}
@@ -469,8 +479,8 @@ const LeftMenu = ({
           ))}
             <li>
               <Link
-                href="/my-team"
-                className={getNavClasses(currentPath === "/my-team")}
+                href={tenantPath("/my-team")}
+                className={getNavClasses(tenantRelativePath === "/my-team")}
               >
                 <FaUsers />
                 <span className="text-[16px] font-semibold">My Team</span>
@@ -480,7 +490,7 @@ const LeftMenu = ({
         {canAccessHrAdmin && (
           <div className="mt-4 rounded-2xl border border-slate-200/70 bg-slate-50/80 rounded dark:border-slate-700/80 dark:bg-slate-800/60">
             <Link
-              href="/hr-admin"
+              href={tenantPath("/hr-admin")}
               target="_blank"
               className={`${getNavClasses(isRouteActive("/hr-admin"))}`}
             >

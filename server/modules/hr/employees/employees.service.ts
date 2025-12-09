@@ -992,6 +992,7 @@ export const hrEmployeesService = {
         id: true,
         name: true,
         domain: true,
+        subDomain: true,
       },
     });
 
@@ -1001,6 +1002,7 @@ export const hrEmployeesService = {
         message: "Your organization is not available.",
       });
     }
+    const organizationSubDomain = organization.subDomain;
 
     const normalizedEmail = normalizeEmail(input.workEmail);
     const employeeCode = normalizeEmployeeCode(input.employeeCode);
@@ -1236,7 +1238,11 @@ export const hrEmployeesService = {
       };
     });
 
-    const inviteLink = buildInviteLink(invitation.rawToken, normalizedEmail);
+    const inviteLink = buildInviteLink(
+      organizationSubDomain,
+      invitation.rawToken,
+      normalizedEmail,
+    );
     const senderDisplayName =
       ctx.session?.user?.profile?.preferredName ??
       ctx.session?.user?.profile?.firstName ??

@@ -1,7 +1,7 @@
 import { trpc } from "@/trpc/client";
 import Text from "../atoms/Text/Text";
 import Button from "../atoms/buttons/Button";
-import { formatDate } from "@/app/(main)/profile/page";
+import { formatDate } from "@/app/(tenant)/org/[orgSlug]/(main)/profile/page";
 
 interface LayoutProps {
   hasRightButton?: boolean;

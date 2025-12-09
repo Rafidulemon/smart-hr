@@ -34,6 +34,7 @@ export const hrOrganizationController = {
     ctx: TRPCContext;
     input: {
       name: string;
+      subDomain: string;
       domain?: string | null;
       timezone?: string | null;
       locale?: string | null;
@@ -42,6 +43,7 @@ export const hrOrganizationController = {
       ownerPhone?: string | null;
       ownerDesignation?: string | null;
       sendInvite?: boolean;
+      logoUrl?: string | null;
     };
   }) => hrOrganizationService.createOrganization(ctx, input),
   deleteOrganization: ({

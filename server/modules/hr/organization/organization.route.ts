@@ -30,6 +30,16 @@ const organizationUserInput = z.object({
 
 const createOrganizationInput = z.object({
   name: z.string().min(3, "Organization name is required."),
+  subDomain: z
+    .string()
+    .trim()
+    .min(3, "Sub-domain must be at least 3 characters.")
+    .max(63, "Sub-domain must be at most 63 characters.")
+    .regex(
+      /^[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/i,
+      "Sub-domain can only include letters, numbers, and hyphens, and cannot start or end with a hyphen.",
+    )
+    .transform((value) => value.toLowerCase()),
   domain: z
     .string()
     .min(3, "Domain must be at least 3 characters.")

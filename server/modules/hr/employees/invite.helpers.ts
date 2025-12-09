@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import nodemailer from "nodemailer";
 
 import { createRandomToken } from "@/server/utils/token";
+import { tenantAbsoluteUrl } from "@/lib/tenant/routing";
 
 const roleLabels: Record<UserRole, string> = {
   SUPER_ADMIN: "Super Admin",
@@ -84,8 +85,16 @@ const getSiteUrl = () => {
   return `http://localhost:${process.env.PORT ?? 3000}`;
 };
 
-export const buildInviteLink = (token: string, email: string) =>
-  `${getSiteUrl()}/auth/signup?token=${encodeURIComponent(token)}&email=${encodeURIComponent(email)}`;
+export const buildInviteLink = (
+  organizationSubDomain: string,
+  token: string,
+  email: string,
+) =>
+  tenantAbsoluteUrl(
+    getSiteUrl(),
+    organizationSubDomain,
+    `/auth/signup?token=${encodeURIComponent(token)}&email=${encodeURIComponent(email)}`,
+  );
 
 export const createPlaceholderPasswordHash = async () => {
   const randomSecret = createRandomToken(24);

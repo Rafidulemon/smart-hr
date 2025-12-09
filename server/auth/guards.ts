@@ -6,6 +6,10 @@ import { getServerSession } from "next-auth";
 import { prisma } from "@/prisma";
 import { authUserSelect, type AuthUser } from "@/server/auth/selection";
 import { nextAuthOptions } from "@/app/utils/next-auth-options";
+import {
+  canonicalizeTenantSlug,
+  tenantAuthPath,
+} from "@/lib/tenant/routing";
 
 export async function getCurrentUser(): Promise<AuthUser | null> {
   const session = await getServerSession(nextAuthOptions);
@@ -22,12 +26,32 @@ export async function getCurrentUser(): Promise<AuthUser | null> {
   return user;
 }
 
-export async function requireUser() {
+const loginRedirect = (slug?: string): never => {
+  if (slug) {
+    redirect(tenantAuthPath(slug));
+  }
+  redirect("/auth/super_admin");
+};
+
+export async function requireUser(expectedSlug?: string): Promise<AuthUser> {
   const user = await getCurrentUser();
 
   if (!user) {
-    redirect("/auth/login");
+    loginRedirect(expectedSlug);
   }
 
-  return user;
+  const authedUser = user as AuthUser;
+
+  if (expectedSlug) {
+    const normalizedExpectedSlug = canonicalizeTenantSlug(expectedSlug);
+    const userSlug = authedUser.organization?.subDomain
+      ? canonicalizeTenantSlug(authedUser.organization.subDomain)
+      : null;
+
+    if (!userSlug || userSlug !== normalizedExpectedSlug) {
+      loginRedirect(expectedSlug);
+    }
+  }
+
+  return authedUser;
 }

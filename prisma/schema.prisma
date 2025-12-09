@@ -106,14 +106,15 @@ enum InvoiceStatus {
 
 /// Top-level organisation/workspace that owns employees and policies.
 model Organization {
-  id        String   @id @default(uuid())
-  name      String
-  domain    String?  @unique
-  timezone  String?  @default("Asia/Dhaka")
-  locale    String?  @default("en-US")
-  logoUrl   String   @default("/logo/demo.logo.png")
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id         String   @id @default(uuid())
+  subDomain  String   @unique
+  name       String
+  domain     String?  @unique
+  timezone   String?  @default("Asia/Dhaka")
+  locale     String?  @default("en-US")
+  logoUrl    String   @default("/logo/demo.logo.png")
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
   users             User[]
   threads           Thread[]

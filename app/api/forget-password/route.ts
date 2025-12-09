@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import nodemailer from "nodemailer";
 
 import { prisma } from "@/prisma";
+import { tenantAbsoluteUrl } from "@/lib/tenant/routing";
 
 const TOKEN_TTL_MINUTES = 30;
 
@@ -42,6 +43,13 @@ export async function POST(request: Request) {
         id: true,
         email: true,
         role: true,
+        organization: {
+          select: {
+            id: true,
+            name: true,
+            subDomain: true,
+          },
+        },
         profile: {
           select: {
             firstName: true,
@@ -93,7 +101,15 @@ export async function POST(request: Request) {
       },
     });
 
-    const resetLink = `${getBaseUrl()}/auth/reset-password?token=${encodeURIComponent(token)}`;
+    if (!user.organization) {
+      throw new Error("User does not belong to an organization.");
+    }
+
+    const resetLink = tenantAbsoluteUrl(
+      getBaseUrl(),
+      user.organization.subDomain,
+      `/auth/reset-password?token=${encodeURIComponent(token)}`,
+    );
 
     const recipientName = user.profile?.firstName?.trim() || user.profile?.lastName?.trim() || "";
     const salutation = recipientName ? `Dear ${recipientName},` : "Dear team member,";
