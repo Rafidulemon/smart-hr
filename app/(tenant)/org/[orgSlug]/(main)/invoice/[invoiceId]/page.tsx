@@ -2,7 +2,6 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useParams, usePathname, useRouter, useSearchParams } from "next/navigation";
-
 import Button from "@/app/components/atoms/buttons/Button";
 import PasswordInput from "@/app/components/atoms/inputs/PasswordInput";
 import TextArea from "@/app/components/atoms/inputs/TextArea";
@@ -11,7 +10,7 @@ import LoadingSpinner from "@/app/components/LoadingSpinner";
 import { InvoiceDetailCard } from "@/app/components/invoices/InvoiceDetailCard";
 import { trpc } from "@/trpc/client";
 import { Modal } from "@/app/components/atoms/frame/Modal";
-import { downloadInvoicePdf } from "@/app/lib/downloadInvoicePdf";
+import { downloadInvoicePdf } from "@/lib/downloadInvoicePdf";
 import { useTenantPaths } from "@/app/components/tenant/TenantProvider";
 
 const tokenKey = (invoiceId: string) => `smart-hr.invoice.token:${invoiceId}`;

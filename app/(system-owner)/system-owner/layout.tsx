@@ -5,7 +5,7 @@ import "@/app/globals.css";
 import { requireUser } from "@/server/auth/guards";
 import { tenantPath } from "@/lib/tenant/routing";
 import ResponsiveDashboardShell from "@/app/components/layouts/ResponsiveDashboardShell";
-import SystemOwnerLeftMenu from "./SystemOwnerLeftMenu";
+import SystemOwnerLeftMenu from "@/app/components/system-owner/SystemOwnerLeftMenu";
 
 type SystemOwnerLayoutProps = {
   children: ReactNode;

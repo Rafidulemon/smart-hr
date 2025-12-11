@@ -50,7 +50,7 @@ const defaultShowcase: ShowcaseContent = {
   ),
 };
 
-export default function AuthLayout({
+export default function SystemOwnerAuthLayout({
   title,
   subtitle,
   description,

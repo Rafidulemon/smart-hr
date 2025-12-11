@@ -1,4 +1,4 @@
-import SystemOwnerOrganizationsClient from "../SystemOwnerOrganizationsClient";
+import SystemOwnerOrganizationsClient from "@/app/components/system-owner/SystemOwnerOrganizationsClient";
 
 export default function SystemOwnerOrganizationPage() {
   return (

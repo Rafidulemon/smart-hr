@@ -1,4 +1,4 @@
-import SystemOwnerDashboardClient from "./SystemOwnerDashboardClient";
+import SystemOwnerDashboardClient from "@/app/components/system-owner/SystemOwnerDashboardClient";
 
 export default async function SystemOwnerPage() {
   return (

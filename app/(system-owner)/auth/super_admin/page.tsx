@@ -7,8 +7,7 @@ import { useEffect, useState } from "react";
 import type { ChangeEvent } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-
-import AuthLayout from "../_components/AuthLayout";
+import SystemOwnerAuthLayout from "@/app/components/auth/SystemOwnerAuthLayout";
 import Button from "@/app/components/atoms/buttons/Button";
 import EmailInput from "@/app/components/atoms/inputs/EmailInput";
 import PasswordInput from "@/app/components/atoms/inputs/PasswordInput";
@@ -113,7 +112,7 @@ function SuperAdminLoginPage() {
   };
 
   return (
-    <AuthLayout
+    <SystemOwnerAuthLayout
       title="System Owner access"
       subtitle="Keep every organization healthy from a single cockpit."
       description="Use your Super Admin credentials to enter the global control center."
@@ -172,7 +171,7 @@ function SuperAdminLoginPage() {
           />
         </Button>
       </form>
-    </AuthLayout>
+    </SystemOwnerAuthLayout>
   );
 }
 

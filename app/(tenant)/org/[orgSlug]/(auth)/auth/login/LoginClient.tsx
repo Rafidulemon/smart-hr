@@ -7,7 +7,7 @@ import { useEffect, useState, type ChangeEvent } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import AuthLayout from "../_components/AuthLayout";
+import AuthLayout from "../../../../../../components/auth/AuthLayout";
 import Button from "@/app/components/atoms/buttons/Button";
 import EmailInput from "@/app/components/atoms/inputs/EmailInput";
 import PasswordInput from "@/app/components/atoms/inputs/PasswordInput";

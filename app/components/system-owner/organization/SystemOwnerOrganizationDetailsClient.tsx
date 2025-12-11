@@ -14,7 +14,7 @@ import {
 
 import Button from "@/app/components/atoms/buttons/Button";
 import LoadingSpinner from "@/app/components/LoadingSpinner";
-import SystemOwnerEmployeeProfileModal from "@/app/system-owner/components/SystemOwnerEmployeeProfileModal";
+import SystemOwnerEmployeeProfileModal from "@/app/components/system-owner/SystemOwnerEmployeeProfileModal";
 import { trpc } from "@/trpc/client";
 
 type SystemOwnerOrganizationDetailsClientProps = {

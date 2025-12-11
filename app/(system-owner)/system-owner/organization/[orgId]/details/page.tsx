@@ -2,7 +2,7 @@
 
 import { useParams } from "next/navigation";
 
-import SystemOwnerOrganizationDetailsClient from "@/app/system-owner/organization/SystemOwnerOrganizationDetailsClient";
+import SystemOwnerOrganizationDetailsClient from "@/app/components/system-owner/organization/SystemOwnerOrganizationDetailsClient";
 
 export default function OrganizationDetailsPage() {
   const params = useParams<{ orgId: string }>();

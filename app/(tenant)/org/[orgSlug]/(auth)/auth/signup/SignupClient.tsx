@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ChangeEvent, useEffect, useMemo, useState } from "react";
 
-import AuthLayout from "../_components/AuthLayout";
+import AuthLayout from "../../../../../../components/auth/AuthLayout";
 import Button from "@/app/components/atoms/buttons/Button";
 import ImageInput from "@/app/components/atoms/inputs/ImageInput";
 import PasswordInput from "@/app/components/atoms/inputs/PasswordInput";

@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-import AuthLayout from "../_components/AuthLayout";
+import AuthLayout from "../../../../../../components/auth/AuthLayout";
 import Button from "@/app/components/atoms/buttons/Button";
 import EmailInput from "@/app/components/atoms/inputs/EmailInput";
 import Text from "@/app/components/atoms/Text/Text";

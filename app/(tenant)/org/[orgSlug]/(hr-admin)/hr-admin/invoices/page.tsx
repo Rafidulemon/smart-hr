@@ -13,7 +13,7 @@ import { InvoiceDetailCard } from "@/app/components/invoices/InvoiceDetailCard";
 
 import { trpc } from "@/trpc/client";
 import type { InvoiceDetail } from "@/types/invoice";
-import { downloadInvoicePdf, renderInvoicePdfBlob } from "@/app/lib/downloadInvoicePdf";
+import { downloadInvoicePdf, renderInvoicePdfBlob } from "@/lib/downloadInvoicePdf";
 
 type LineItemKind = "EARNING" | "DEDUCTION";
 
