@@ -24,6 +24,7 @@ import {
   FaProjectDiagram,
 } from "react-icons/fa";
 import { TbReportAnalytics } from "react-icons/tb";
+import { FiCreditCard } from "react-icons/fi";
 
 import { Modal } from "../atoms/frame/Modal";
 import { canManageTeams } from "@/types/hr-team";
@@ -35,6 +36,7 @@ import { trpc } from "@/trpc/client";
 import { DEFAULT_ORGANIZATION_LOGO } from "@/lib/organization-branding";
 import { useTenantPaths } from "@/app/components/tenant/TenantProvider";
 import { stripTenantPrefix } from "@/lib/tenant/routing";
+import { canUpgradePlan } from "@/types/hr-billing";
 
 type MenuItem = {
   id:
@@ -50,7 +52,8 @@ type MenuItem = {
     | "leave"
     | "alerts"
     | "messages"
-    | "invoices";
+    | "invoices"
+    | "plan-upgrade";
   label: string;
   icon: ReactNode;
   href?: string;
@@ -131,6 +134,12 @@ const hrMenuItems: MenuItem[] = [
     label: "Invoice Management",
     icon: <FaFileInvoice />,
     href: "/hr-admin/invoices",
+  },
+  {
+    id: "plan-upgrade",
+    label: "Plan Upgrade",
+    icon: <FiCreditCard />,
+    href: "/hr-admin/plan-upgrade",
   },
   {
     id: "reports",
@@ -256,6 +265,9 @@ const HrAdminLeftMenu = ({
       }
       if (item.id === "organization") {
         return canManageOrganization(viewerRole);
+      }
+      if (item.id === "plan-upgrade") {
+        return canUpgradePlan(viewerRole);
       }
       return true;
     });

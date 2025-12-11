@@ -6,11 +6,17 @@ import { useState } from "react";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
 import {
+  FiActivity,
+  FiBarChart2,
+  FiCpu,
+  FiFlag,
   FiLayers,
   FiLogOut,
   FiPlusCircle,
   FiSettings,
   FiShield,
+  FiSliders,
+  FiCreditCard,
 } from "react-icons/fi";
 import { MdOutlineDashboardCustomize } from "react-icons/md";
 
@@ -42,6 +48,36 @@ const navItems: NavItem[] = [
     label: "Settings",
     href: "/system-owner/settings",
     icon: <FiSettings />,
+  },
+  {
+    label: "Plans & Billing",
+    href: "/system-owner/plans-billing",
+    icon: <FiCreditCard />,
+  },
+  {
+    label: "Usage & Limits",
+    href: "/system-owner/usage-limits",
+    icon: <FiActivity />,
+  },
+  {
+    label: "Feature Flags",
+    href: "/system-owner/feature-flags",
+    icon: <FiFlag />,
+  },
+  {
+    label: "AL & Integrations",
+    href: "/system-owner/al-integrations",
+    icon: <FiCpu />,
+  },
+  {
+    label: "Monitoring & Logs",
+    href: "/system-owner/monitoring-logs",
+    icon: <FiBarChart2 />,
+  },
+  {
+    label: "System Setting",
+    href: "/system-owner/system-setting",
+    icon: <FiSliders />,
   },
 ];
 
