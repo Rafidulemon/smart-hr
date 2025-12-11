@@ -64,6 +64,7 @@ function TextInput(props: Props) {
         readOnly={readOnly}
         disabled={disabled}
         step={step}
+        required={isRequired}
         {...register?.(name, registerOptions)}
       />
       {error && (

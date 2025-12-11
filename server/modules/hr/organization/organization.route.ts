@@ -7,6 +7,21 @@ const managementInput = z.object({
   organizationId: z.string().min(1).optional(),
 });
 
+const membersInput = z.object({
+  organizationId: z.string().min(1, "Organization is required."),
+  cursor: z.string().optional().nullable(),
+  limit: z.number().int().min(1).max(50).optional(),
+});
+
+const organizationDetailsInput = z.object({
+  organizationId: z.string().min(1, "Organization is required."),
+});
+
+const organizationEmployeeProfileInput = z.object({
+  organizationId: z.string().min(1, "Organization is required."),
+  employeeId: z.string().min(1, "Employee is required."),
+});
+
 const updateOrganizationInput = z.object({
   name: z.string().min(3, "Organization name is required."),
   domain: z
@@ -22,6 +37,16 @@ const updateOrganizationInput = z.object({
     .string()
     .min(5, "Organization logo is required.")
     .max(1024, "Logo URL must be less than 1024 characters."),
+  subDomain: z
+    .string()
+    .trim()
+    .min(3, "Sub-domain must be at least 3 characters.")
+    .max(63, "Sub-domain must be at most 63 characters.")
+    .regex(
+      /^[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/i,
+      "Sub-domain can only include letters, numbers, and hyphens, and cannot start or end with a hyphen.",
+    )
+    .optional(),
 });
 
 const organizationUserInput = z.object({
@@ -72,6 +97,10 @@ const deleteOrganizationInput = z.object({
   password: z.string().min(6, "Password is required."),
 });
 
+const verifyDeletePasswordInput = z.object({
+  password: z.string().min(6, "Password is required."),
+});
+
 export const hrOrganizationRouter = createTRPCRouter({
   management: protectedProcedure
     .input(managementInput.optional())
@@ -81,6 +110,21 @@ export const hrOrganizationRouter = createTRPCRouter({
   list: protectedProcedure.query(({ ctx }) =>
     hrOrganizationController.list({ ctx }),
   ),
+  members: protectedProcedure
+    .input(membersInput)
+    .query(({ ctx, input }) =>
+      hrOrganizationController.members({ ctx, input }),
+    ),
+  details: protectedProcedure
+    .input(organizationDetailsInput)
+    .query(({ ctx, input }) =>
+      hrOrganizationController.details({ ctx, input }),
+    ),
+  employeeProfile: protectedProcedure
+    .input(organizationEmployeeProfileInput)
+    .query(({ ctx, input }) =>
+      hrOrganizationController.employeeProfile({ ctx, input }),
+    ),
   updateDetails: protectedProcedure
     .input(updateOrganizationInput)
     .mutation(({ ctx, input }) =>
@@ -105,5 +149,10 @@ export const hrOrganizationRouter = createTRPCRouter({
     .input(deleteOrganizationInput)
     .mutation(({ ctx, input }) =>
       hrOrganizationController.deleteOrganization({ ctx, input }),
+    ),
+  verifyDeletePassword: protectedProcedure
+    .input(verifyDeletePasswordInput)
+    .mutation(({ ctx, input }) =>
+      hrOrganizationController.verifyDeletePassword({ ctx, input }),
     ),
 });

@@ -10,6 +10,27 @@ export const hrOrganizationController = {
     input?: { organizationId?: string };
   }) => hrOrganizationService.management(ctx, input?.organizationId),
   list: ({ ctx }: { ctx: TRPCContext }) => hrOrganizationService.listAll(ctx),
+  members: ({
+    ctx,
+    input,
+  }: {
+    ctx: TRPCContext;
+    input: { organizationId: string; cursor?: string | null; limit?: number };
+  }) => hrOrganizationService.listMembers(ctx, input),
+  details: ({
+    ctx,
+    input,
+  }: {
+    ctx: TRPCContext;
+    input: { organizationId: string };
+  }) => hrOrganizationService.details(ctx, input.organizationId),
+  employeeProfile: ({
+    ctx,
+    input,
+  }: {
+    ctx: TRPCContext;
+    input: { organizationId: string; employeeId: string };
+  }) => hrOrganizationService.employeeProfile(ctx, input),
   updateDetails: ({
     ctx,
     input,
@@ -21,6 +42,8 @@ export const hrOrganizationController = {
       timezone?: string | null;
       locale?: string | null;
       organizationId?: string | null;
+      logoUrl?: string | null;
+      subDomain?: string;
     };
   }) => hrOrganizationService.updateDetails(ctx, input),
   addAdmin: ({ ctx, userId }: { ctx: TRPCContext; userId: string }) =>
@@ -53,4 +76,11 @@ export const hrOrganizationController = {
     ctx: TRPCContext;
     input: { organizationId: string; password: string };
   }) => hrOrganizationService.deleteOrganization(ctx, input),
+  verifyDeletePassword: ({
+    ctx,
+    input,
+  }: {
+    ctx: TRPCContext;
+    input: { password: string };
+  }) => hrOrganizationService.verifyDeletePassword(ctx, input.password),
 };

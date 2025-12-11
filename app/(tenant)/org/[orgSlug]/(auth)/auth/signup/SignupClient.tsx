@@ -206,10 +206,8 @@ export default function SignupClient({ tenantBrand }: SignupClientProps) {
       return;
     }
 
-    if (!photoUrl || photoUrl === "/dp.png") {
-      setPhotoError("Please upload your profile photo.");
-      return;
-    }
+    const sanitizedPhotoUrl =
+      photoUrl && photoUrl !== "/dp.png" ? photoUrl : undefined;
 
     completeInvite.mutate({
       token: inviteToken,
@@ -217,7 +215,7 @@ export default function SignupClient({ tenantBrand }: SignupClientProps) {
       lastName: data.lastName.trim(),
       preferredName: data.preferredName?.trim() || undefined,
       password: data.password,
-      profilePhotoUrl: photoUrl,
+      profilePhotoUrl: sanitizedPhotoUrl,
     });
   };
 

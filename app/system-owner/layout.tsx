@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import "@/app/globals.css";
 import { requireUser } from "@/server/auth/guards";
 import { tenantPath } from "@/lib/tenant/routing";
+import ResponsiveDashboardShell from "@/app/components/layouts/ResponsiveDashboardShell";
 import SystemOwnerLeftMenu from "./SystemOwnerLeftMenu";
 
 type SystemOwnerLayoutProps = {
@@ -30,11 +31,16 @@ export default async function SystemOwnerLayout({
     "Super Admin";
 
   return (
-    <div className="min-h-screen bg-slate-50 pb-12 pt-8 dark:bg-slate-950">
-      <div className="mx-auto flex w-full max-w-6xl gap-6 px-4 sm:px-6 lg:px-8">
-        <SystemOwnerLeftMenu viewerName={viewerName} viewerEmail={user.email} />
-        <main className="flex-1">{children}</main>
-      </div>
-    </div>
+    <ResponsiveDashboardShell
+      menuLabel="System Owner Menu"
+      menu={
+        <SystemOwnerLeftMenu
+          viewerName={viewerName}
+          viewerEmail={user.email}
+        />
+      }
+    >
+      {children}
+    </ResponsiveDashboardShell>
   );
 }

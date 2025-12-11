@@ -40,6 +40,7 @@ CREATE TYPE "InvoiceStatus" AS ENUM ('DRAFT', 'PENDING_REVIEW', 'CHANGES_REQUEST
 -- CreateTable
 CREATE TABLE "Organization" (
     "id" TEXT NOT NULL,
+    "subDomain" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "domain" TEXT,
     "timezone" TEXT DEFAULT 'Asia/Dhaka',
@@ -489,6 +490,9 @@ CREATE TABLE "MonthlyReportEntry" (
 
     CONSTRAINT "MonthlyReportEntry_pkey" PRIMARY KEY ("id")
 );
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Organization_subDomain_key" ON "Organization"("subDomain");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Organization_domain_key" ON "Organization"("domain");
