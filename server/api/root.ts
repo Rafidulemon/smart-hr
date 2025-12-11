@@ -21,6 +21,7 @@ import { invoiceRouter } from "@/server/modules/invoice/invoice.route";
 import { hrInvoicesRouter } from "@/server/modules/hr/invoices/invoices.route";
 import { hrOrganizationRouter } from "@/server/modules/hr/organization/organization.route";
 import { hrDepartmentRouter } from "@/server/modules/hr/department/department.route";
+import { tenantRouter } from "@/server/modules/tenant/tenant.route";
 
 export const appRouter = createTRPCRouter({
   health: healthRouter,
@@ -45,6 +46,7 @@ export const appRouter = createTRPCRouter({
   hrReport: hrReportRouter,
   hrInvoices: hrInvoicesRouter,
   hrOrganization: hrOrganizationRouter,
+  tenant: tenantRouter,
 });
 
 export type AppRouter = typeof appRouter;

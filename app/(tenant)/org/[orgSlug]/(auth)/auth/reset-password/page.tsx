@@ -1,9 +1,7 @@
-import { Suspense } from "react";
 import jwt, { JsonWebTokenError } from "jsonwebtoken";
 import { notFound } from "next/navigation";
 import { ResetPasswordClient } from "@/app/components/auth/ResetPasswordClient";
 import { canonicalizeTenantSlug } from "@/lib/tenant/routing";
-import { prisma } from "@/prisma";
 
 export const dynamic = "force-dynamic";
 
@@ -108,34 +106,5 @@ export default async function ResetPasswordPage({
     notFound();
   }
 
-  const organization = await prisma.organization.findUnique({
-    where: { subDomain: orgSlug },
-    select: {
-      name: true,
-      logoUrl: true,
-    },
-  });
-
-  const tenantBrand = organization
-    ? {
-        name: organization.name,
-        logoUrl: organization.logoUrl ?? undefined,
-      }
-    : undefined;
-
-  return (
-    <Suspense
-      fallback={
-        <div className="flex min-h-screen items-center justify-center text-slate-600">
-          Loading secure reset experience...
-        </div>
-      }
-    >
-      <ResetPasswordClient
-        token={token}
-        userId={payload.userId}
-        tenantBrand={tenantBrand}
-      />
-    </Suspense>
-  );
+  return <ResetPasswordClient token={token} userId={payload.userId} />;
 }

@@ -5,7 +5,6 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import AuthLayout from "./AuthLayout";
 import Button from "@/app/components/atoms/buttons/Button";
 import PasswordInput from "@/app/components/atoms/inputs/PasswordInput";
 import Text from "@/app/components/atoms/Text/Text";
@@ -32,16 +31,12 @@ type FormData = z.infer<typeof schema>;
 type ResetPasswordClientProps = {
   token: string;
   userId: string;
-  tenantBrand?: {
-    name: string;
-    logoUrl?: string | null;
-  };
+  goUrl?: string | null;
 };
 
 export function ResetPasswordClient({
   token,
   userId,
-  tenantBrand,
 }: ResetPasswordClientProps) {
   const router = useRouter();
   const { tenantAuthPath } = useTenantPaths();
@@ -81,27 +76,20 @@ export function ResetPasswordClient({
   };
 
   return (
-    <AuthLayout
-      title="Set a fresh password"
-      subtitle="Choose a new password to finish securing your account."
-      description="Make it unique. We recommend combining upper & lowercase letters, numbers, and special characters."
-      helper="Tip: Avoid using previous passwords or other apps. We'll let you know if your new password meets our security requirements."
-      badge="Recovery portal"
-      footer={
-        <p className="text-sm">
-          Ready to jump back in?
-          <button
-            type="button"
-            onClick={() => router.push(tenantAuthPath())}
-            className="ml-2 font-semibold text-indigo-600 transition hover:text-indigo-500 dark:text-sky-400 dark:hover:text-sky-300"
-          >
-            Go to login
-          </button>
+    <div className="space-y-8">
+      <div className="space-y-2">
+        <p className="text-xs font-semibold uppercase tracking-[0.35em] text-slate-400 dark:text-slate-500">
+          Choose new password
         </p>
-      }
-      showShowcase={false}
-      tenantBrand={tenantBrand}
-    >
+        <Text
+          text="Update your credentials"
+          className="text-2xl font-semibold text-text_primary"
+        />
+        <p className="text-sm text-text_secondary">
+          Create a strong password to secure your account. You’ll sign in again
+          once this update succeeds.
+        </p>
+      </div>
       <form onSubmit={handleSubmit(handleLogin)} className="space-y-6">
         <PasswordInput
           name="password"
@@ -143,11 +131,15 @@ export function ResetPasswordClient({
           disabled={!token || !userId || updatePasswordMutation.isPending}
         >
           <Text
-            text={updatePasswordMutation.isPending ? "Updating password..." : "Update password"}
+            text={
+              updatePasswordMutation.isPending
+                ? "Updating password..."
+                : "Update password"
+            }
             className="text-[16px] font-semibold"
           />
         </Button>
       </form>
-    </AuthLayout>
+    </div>
   );
 }

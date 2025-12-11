@@ -2,189 +2,129 @@
 
 import Image from "next/image";
 import { ReactNode } from "react";
-import Button from "@/app/components/atoms/buttons/Button";
-import Text from "@/app/components/atoms/Text/Text";
 import Header from "@/app/components/navigations/Header";
 import { DEFAULT_ORGANIZATION_LOGO } from "@/lib/organization-branding";
 
-type ShowcaseContent = {
-  eyebrow: string;
-  title: string;
-  description: string;
-  image: {
-    src: string;
-    alt: string;
-  };
-  footer?: ReactNode;
-};
-
 type AuthLayoutProps = {
-  title: string;
-  subtitle: string;
-  description?: string;
-  helper?: string;
-  badge?: string;
   children: ReactNode;
-  footer?: ReactNode;
-  showcase?: Partial<ShowcaseContent>;
-  showShowcase?: boolean;
-  tenantBrand?: {
-    name: string;
-    logoUrl?: string | null;
-  };
-};
-
-const defaultShowcase: ShowcaseContent = {
-  eyebrow: "People Ops OS",
-  title: "Bring clarity to every HR ritual",
-  description:
-    "Automate attendance, keep policies visible, and give your teams the context they need to show up prepared.",
-  image: {
-    src: "/forgetPass.png",
-    alt: "Illustration of HR collaboration",
-  },
-  footer: (
-    <Button theme="white" isWidthFull>
-      <Text text="Talk to People Ops" className="text-[15px] font-semibold" />
-    </Button>
-  ),
+  tenantName?: string | null;
+  tenantLogo?: string | null;
 };
 
 export default function AuthLayout({
-  title,
-  subtitle,
-  description,
-  helper,
-  badge = "Secure access",
   children,
-  footer,
-  showcase,
-  showShowcase = true,
-  tenantBrand,
+  tenantName,
+  tenantLogo,
 }: AuthLayoutProps) {
-  const hero: ShowcaseContent = {
-    ...defaultShowcase,
-    ...showcase,
-    image: {
-      ...defaultShowcase.image,
-      ...showcase?.image,
+  const brandName = tenantName?.trim() || "Smart HR";
+  const brandLogo = tenantLogo || DEFAULT_ORGANIZATION_LOGO;
+  const highlightItems = [
+    {
+      title: "One identity",
+      description: `Sign in, accept invites, and reset passwords with the same secure ${brandName} credentials.`,
     },
-    footer: showcase?.footer ?? defaultShowcase.footer,
-  };
-
-  const orgName = tenantBrand?.name ?? "Demo Company";
-  const orgLogo = tenantBrand?.logoUrl ?? DEFAULT_ORGANIZATION_LOGO;
+    {
+      title: "Tenant-aware security",
+      description:
+        "Every action takes place inside your dedicated workspace, keeping data scoped to the right organization.",
+    },
+    {
+      title: "Human support",
+      description:
+        "Need help? People Ops teams can resend invites or unlock accounts in a few clicks.",
+    },
+  ];
 
   return (
-    <div className="relative isolate min-h-screen overflow-hidden bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100">
+    <div className="relative isolate min-h-screen overflow-hidden bg-slate-950 text-slate-100">
       <div className="pointer-events-none absolute inset-0">
-        <div className="absolute left-[-10%] top-[-15%] h-64 w-64 rounded-full bg-sky-200/60 blur-[120px] dark:bg-slate-900" />
-        <div className="absolute right-[-5%] top-0 h-80 w-80 rounded-full bg-indigo-200/60 blur-[140px] dark:bg-slate-900" />
-        <div className="absolute inset-x-0 bottom-[-20%] h-96 bg-gradient-to-t from-slate-200/70 to-transparent dark:from-slate-900/50" />
+        <div className="absolute inset-x-[-20%] top-[-30%] h-96 bg-gradient-to-b from-indigo-600/40 via-slate-900 to-slate-950 blur-3xl" />
+        <div className="absolute bottom-[-20%] left-[-10%] h-80 w-80 rounded-full bg-sky-500/30 blur-[140px]" />
+        <div className="absolute right-[-15%] top-1/4 h-96 w-96 rounded-full bg-cyan-500/30 blur-[160px]" />
       </div>
 
-      <div className="fixed left-0 right-0 top-6 z-40 px-6">
-        {tenantBrand ? (
-          <header className="mx-auto flex w-full max-w-5xl items-center justify-between rounded-3xl border border-white/70 bg-white/90 px-6 py-3 text-slate-900 shadow-xl shadow-slate-200/70 backdrop-blur-lg dark:border-slate-800 dark:bg-slate-900/80 dark:text-slate-100 dark:shadow-slate-950/40">
-            <div className="flex items-center gap-3">
-              <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl shadow-lg shadow-indigo-500/30">
+      <div className="relative z-10 flex min-h-screen flex-col">
+        <div className="px-6 pt-6">
+          <Header tenantBrand={{ name: brandName, logoUrl: tenantLogo }} />
+        </div>
+
+        <div className="mx-auto grid w-full max-w-6xl flex-1 gap-8 px-6 pb-12 pt-10 lg:grid-cols-[1.05fr,0.95fr] lg:pt-16">
+          <aside className="rounded-[32px] border border-white/10 bg-white/5 p-10 text-white shadow-[0_25px_80px_rgba(15,23,42,0.45)] backdrop-blur">
+            <p className="text-xs font-semibold uppercase tracking-[0.4em] text-slate-200">
+              {brandName} workspace
+            </p>
+            <h1 className="mt-6 text-3xl font-semibold leading-tight text-white lg:text-4xl">
+              Secure identities for every HR ritual
+            </h1>
+            <p className="mt-4 text-base text-slate-200">
+              Use the same trusted gateway whether you are logging in, accepting
+              an invitation, or recovering an account.
+            </p>
+
+            <ul className="mt-10 space-y-6 text-sm text-slate-100">
+              {highlightItems.map((item) => (
+                <li key={item.title} className="flex gap-4">
+                  <div className="mt-1 h-2.5 w-2.5 flex-shrink-0 rounded-full bg-gradient-to-br from-indigo-400 to-cyan-300" />
+                  <div>
+                    <p className="font-semibold">{item.title}</p>
+                    <p className="text-slate-200/80">{item.description}</p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+
+            <div className="mt-12 flex items-center gap-4 rounded-2xl border border-white/10 bg-white/5 p-4 text-sm">
+              <div className="relative h-14 w-14 overflow-hidden rounded-2xl border border-white/20 bg-white/10">
                 <Image
-                  src={orgLogo}
-                  alt={`${orgLogo} logo`}
-                  width={36}
-                  height={36}
-                  className="h-9 w-9 object-contain"
-                  priority
+                  src={brandLogo}
+                  alt={`${brandName} logo`}
+                  fill
+                  className="object-contain p-2"
+                  sizes="56px"
                 />
-              </span>
-              <div className="flex flex-col">
-                <span className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-500 dark:text-slate-400">
-                  Welcome to
-                </span>
-                <span className="text-base font-semibold leading-tight text-slate-900 dark:text-white">
-                  {orgName}
-                </span>
               </div>
-            </div>
-            <span className="text-sm font-semibold text-slate-500 dark:text-slate-300">
-              Secure login
-            </span>
-          </header>
-        ) : (
-          <Header tenantBrand={{ name: orgName, logoUrl: orgLogo }} />
-        )}
-      </div>
-
-      <div className="relative z-10 flex min-h-screen items-center px-6 pb-12 pt-32 lg:pt-36">
-        <div
-          className={`mx-auto ${
-            showShowcase
-              ? "grid w-full max-w-6xl gap-8 lg:grid-cols-[1.05fr,0.95fr]"
-              : "w-full max-w-xl"
-          }`}
-        >
-          {showShowcase ? (
-            <section className="rounded-[32px] border border-white/30 bg-gradient-to-br from-indigo-600 via-sky-500 to-cyan-400 p-10 text-white shadow-2xl shadow-sky-500/30 backdrop-blur-lg dark:border-slate-900/60 dark:from-slate-900 dark:via-slate-900 dark:to-slate-800 dark:shadow-slate-950">
-              <span className="inline-flex items-center rounded-full border border-white/30 px-4 py-1 text-xs uppercase tracking-[0.3em] text-white/80">
-                {hero.eyebrow}
-              </span>
-              <h2 className="mt-6 text-3xl font-semibold leading-tight md:text-4xl">
-                {hero.title}
-              </h2>
-              <p className="mt-4 text-base text-white/80 md:text-lg">
-                {hero.description}
-              </p>
-
-              <div className="relative mt-8 overflow-hidden rounded-[28px] border border-white/20 bg-white/10">
-                <div className="absolute inset-0 bg-gradient-to-tr from-indigo-500/30 via-transparent to-transparent" />
-                <div className="relative aspect-[4/3] w-full">
-                  <Image
-                    src={hero.image.src}
-                    alt={hero.image.alt}
-                    fill
-                    className="object-contain p-6"
-                    sizes="(max-width: 1024px) 100vw, 600px"
-                    priority
-                  />
-                </div>
-              </div>
-
-              <div className="mt-8">{hero.footer}</div>
-            </section>
-          ) : null}
-
-          <section className="rounded-[32px] border border-white/70 bg-white/90 p-10 shadow-2xl shadow-slate-200/70 backdrop-blur dark:border-slate-800 dark:bg-slate-900/90 dark:shadow-slate-950/50">
-            <div className="space-y-3">
-              <span className="inline-flex items-center rounded-full border border-slate-200/70 bg-slate-50 px-4 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-slate-500 dark:border-slate-700 dark:bg-slate-800/60 dark:text-slate-300">
-                {badge}
-              </span>
-              <h1 className="text-3xl font-semibold leading-tight text-slate-900 dark:text-white">
-                {title}
-              </h1>
-              <p className="text-base text-slate-600 dark:text-slate-300">
-                {subtitle}
-              </p>
-              {description ? (
-                <p className="text-sm text-slate-500 dark:text-slate-400">
-                  {description}
+              <div>
+                <p className="text-xs uppercase tracking-[0.4em] text-white/70">
+                  Organization
                 </p>
-              ) : null}
+                <p className="text-base font-semibold text-white">
+                  {brandName}
+                </p>
+                <p className="text-slate-200/70">
+                  Managed access · HR & payroll apps
+                </p>
+              </div>
             </div>
+          </aside>
 
-            {helper ? (
-              <div className="mt-4 rounded-2xl border border-slate-200 bg-slate-50/80 px-4 py-3 text-sm text-slate-600 dark:border-slate-700 dark:bg-slate-800/70 dark:text-slate-300">
-                {helper}
+          <main className="relative flex items-start justify-center lg:items-stretch">
+            <div className="w-full max-w-xl rounded-[32px] border border-white/80 bg-white/95 p-10 text-slate-900 shadow-2xl shadow-slate-200/80 backdrop-blur dark:border-slate-800 dark:bg-slate-900/95 dark:text-slate-100 dark:shadow-slate-950/70">
+              <div className="flex items-center gap-3 text-sm font-semibold uppercase tracking-[0.35em] text-slate-400 dark:text-slate-500">
+                <span className="inline-flex h-8 w-8 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500 to-cyan-400 text-white">
+                  →
+                </span>
+                <span>Authenticate</span>
               </div>
-            ) : null}
+              <p className="mt-3 text-xl font-semibold text-slate-900 dark:text-white">
+                Access {brandName}
+              </p>
+              <p className="text-sm text-slate-500 dark:text-slate-400">
+                Complete the steps below to manage your workspace access.
+              </p>
 
-            <div className="mt-8">{children}</div>
+              <div className="mt-8">{children}</div>
 
-            {footer ? (
-              <div className="mt-8 border-t border-slate-100 pt-6 text-sm text-slate-500 dark:border-slate-800 dark:text-slate-400">
-                {footer}
-              </div>
-            ) : null}
-          </section>
+              <p className="mt-10 text-center text-xs text-slate-400 dark:text-slate-500">
+                Need help? Contact your HR administrator or{" "}
+                <a
+                  className="font-semibold text-indigo-600 dark:text-sky-400"
+                  href="mailto:support@smart-hr.app"
+                >
+                  support@smart-hr.app
+                </a>
+              </p>
+            </div>
+          </main>
         </div>
       </div>
     </div>
