@@ -24,12 +24,13 @@ function Header({tenantBrand}: TenantProps) {
   const router = useRouter();
   const tenant = useOptionalTenant();
   const tenantRelativePath = tenant ? stripTenantPrefix(pathname ?? '/') : pathname ?? '/';
+  const systemOwnerLoginPath = '/system-owner/auth/login';
   const isLoginPage = tenant
     ? tenantRelativePath === '/auth/login'
-    : pathname === '/auth/super_admin';
+    : pathname === systemOwnerLoginPath;
 
   const isActive = (href: string) => pathname?.startsWith(href);
-  const loginHref = tenant ? tenantAuthPath(tenant.slug) : '/auth/super_admin';
+  const loginHref = tenant ? tenantAuthPath(tenant.slug) : systemOwnerLoginPath;
   const goHome = () => {
     if (tenant) {
       router.push(tenantPath(tenant.slug));

@@ -69,7 +69,7 @@ export const nextAuthOptions: NextAuthOptions = {
     }),
   ],
   pages: {
-    signIn: "/auth/super_admin",
+    signIn: "/system-owner/auth/login",
   },
   session: {
     strategy: "jwt",

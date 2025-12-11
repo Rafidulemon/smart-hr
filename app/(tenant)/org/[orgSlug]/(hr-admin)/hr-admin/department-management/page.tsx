@@ -1,10 +1,8 @@
 import { redirect } from "next/navigation";
-
 import { requireUser } from "@/server/auth/guards";
 import { canManageDepartments } from "@/types/hr-department";
 import { tenantPath } from "@/lib/tenant/routing";
-
-import DepartmentManagementClient from "./DepartmentManagementClient";
+import DepartmentManagementClient from "@/app/components/hr-admin/DepartmentManagementClient";
 
 export default async function DepartmentManagementPage({
   params,

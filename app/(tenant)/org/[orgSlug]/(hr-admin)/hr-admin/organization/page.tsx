@@ -1,10 +1,8 @@
 import { redirect } from "next/navigation";
-
 import { requireUser } from "@/server/auth/guards";
 import { canManageOrganization } from "@/types/hr-organization";
 import { tenantPath } from "@/lib/tenant/routing";
-
-import OrganizationManagementClient from "./OrganizationManagementClient";
+import OrganizationManagementClient from "@/app/components/hr-admin/OrganizationManagementClient";
 
 export default async function OrganizationManagementPage({
   params,

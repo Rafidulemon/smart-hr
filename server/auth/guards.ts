@@ -30,7 +30,7 @@ const loginRedirect = (slug?: string): never => {
   if (slug) {
     redirect(tenantAuthPath(slug));
   }
-  redirect("/auth/super_admin");
+  redirect("/system-owner/auth/login");
 };
 
 export async function requireUser(expectedSlug?: string): Promise<AuthUser> {

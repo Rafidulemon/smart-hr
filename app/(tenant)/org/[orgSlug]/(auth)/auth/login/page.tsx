@@ -1,8 +1,7 @@
 import { notFound } from "next/navigation";
-
+import LoginClient from "@/app/components/auth/LoginClient";
 import { canonicalizeTenantSlug } from "@/lib/tenant/routing";
 import { prisma } from "@/prisma";
-import LoginClient from "./LoginClient";
 
 export default async function LoginPage({
   params,

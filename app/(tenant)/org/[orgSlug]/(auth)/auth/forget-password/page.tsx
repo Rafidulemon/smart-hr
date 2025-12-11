@@ -1,8 +1,7 @@
 import { notFound } from "next/navigation";
-
+import ForgetPasswordClient from "@/app/components/auth/ForgetPasswordClient";
 import { canonicalizeTenantSlug } from "@/lib/tenant/routing";
 import { prisma } from "@/prisma";
-import ForgetPasswordClient from "./ForgetPasswordClient";
 
 type ForgetPasswordPageParams = { orgSlug: string };
 

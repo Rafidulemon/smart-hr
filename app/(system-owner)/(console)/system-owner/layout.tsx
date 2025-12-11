@@ -20,7 +20,7 @@ export default async function SystemOwnerLayout({
     if (user.organization?.subDomain) {
       redirect(tenantPath(user.organization.subDomain));
     }
-    redirect("/auth/super_admin");
+    redirect("/system-owner/auth/login");
   }
 
   const viewerName =

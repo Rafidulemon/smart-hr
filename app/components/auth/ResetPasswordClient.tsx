@@ -5,8 +5,7 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-
-import AuthLayout from "../../../../../../components/auth/AuthLayout";
+import AuthLayout from "./AuthLayout";
 import Button from "@/app/components/atoms/buttons/Button";
 import PasswordInput from "@/app/components/atoms/inputs/PasswordInput";
 import Text from "@/app/components/atoms/Text/Text";

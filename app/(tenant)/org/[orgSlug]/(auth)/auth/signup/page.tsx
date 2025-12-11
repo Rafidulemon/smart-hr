@@ -1,8 +1,8 @@
 import { notFound } from "next/navigation";
-
+import SignupClient from "@/app/components/auth/SignupClient";
 import { canonicalizeTenantSlug } from "@/lib/tenant/routing";
 import { prisma } from "@/prisma";
-import SignupClient from "./SignupClient";
+
 
 type SignupPageParams = { orgSlug: string };
 

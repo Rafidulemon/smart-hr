@@ -1,10 +1,8 @@
 import { redirect } from "next/navigation";
-
 import { requireUser } from "@/server/auth/guards";
 import { canManageTeams } from "@/types/hr-team";
 import { tenantPath } from "@/lib/tenant/routing";
-
-import TeamManagementClient from "./TeamManagementClient";
+import TeamManagementClient from "@/app/components/hr-admin/TeamManagementClient";
 
 export default async function TeamManagementPage({
   params,

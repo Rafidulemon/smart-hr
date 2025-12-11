@@ -1,7 +1,6 @@
 import { redirect } from "next/navigation";
 import type { ReactNode } from "react";
 import { LeaveStatus, type UserRole } from "@prisma/client";
-
 import { requireUser } from "@/server/auth/guards";
 import { prisma } from "@/server/db";
 import ResponsiveDashboardShell from "@/app/components/layouts/ResponsiveDashboardShell";

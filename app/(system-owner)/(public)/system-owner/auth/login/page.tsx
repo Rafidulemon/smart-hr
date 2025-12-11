@@ -3,8 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import type { ChangeEvent } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import SystemOwnerAuthLayout from "@/app/components/auth/SystemOwnerAuthLayout";
@@ -30,43 +29,16 @@ type FormData = z.infer<typeof schema>;
 
 function SuperAdminLoginPage() {
   const router = useRouter();
-  const [rememberMe, setRememberMe] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const {
     register,
     handleSubmit,
-    setValue,
     formState: { errors },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
   });
-
-  useEffect(() => {
-    const rememberedEmail = localStorage.getItem("superAdminEmail");
-    const rememberedPassword = localStorage.getItem("superAdminPassword");
-
-    if (rememberedEmail && rememberedPassword) {
-      setValue("email", rememberedEmail);
-      setValue("password", rememberedPassword);
-      setRememberMe(true);
-    }
-  }, [setValue]);
-
-  const toggleRememberMe = (event: ChangeEvent<HTMLInputElement>) => {
-    setRememberMe(event.target.checked);
-  };
-
-  const persistRememberedCredentials = (data: FormData) => {
-    if (rememberMe) {
-      localStorage.setItem("superAdminEmail", data.email);
-      localStorage.setItem("superAdminPassword", data.password);
-    } else {
-      localStorage.removeItem("superAdminEmail");
-      localStorage.removeItem("superAdminPassword");
-    }
-  };
 
   const handleForgotPasswordClick = () => {
     const slugInput =
@@ -92,7 +64,6 @@ function SuperAdminLoginPage() {
       throw new Error("Invalid email or password.");
     }
 
-    persistRememberedCredentials(data);
     router.push(response.url ?? "/system-owner");
   };
 
@@ -140,16 +111,7 @@ function SuperAdminLoginPage() {
           />
         </div>
 
-        <div className="flex flex-wrap items-center justify-between text-sm text-slate-500 dark:text-slate-400">
-          <label className="inline-flex items-center gap-2">
-            <input
-              type="checkbox"
-              className="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 dark:border-slate-600 dark:bg-slate-900"
-              checked={rememberMe}
-              onChange={toggleRememberMe}
-            />
-            <span>Remember me on this device</span>
-          </label>
+        <div className="flex justify-end text-sm text-slate-500 dark:text-slate-400">
           <button
             type="button"
             onClick={handleForgotPasswordClick}

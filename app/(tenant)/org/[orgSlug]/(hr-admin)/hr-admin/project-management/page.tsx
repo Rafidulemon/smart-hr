@@ -1,10 +1,8 @@
 import { redirect } from "next/navigation";
-
 import { requireUser } from "@/server/auth/guards";
 import { canManageProjects } from "@/types/hr-project";
 import { tenantPath } from "@/lib/tenant/routing";
-
-import ProjectManagementClient from "./ProjectManagementClient";
+import ProjectManagementClient from "@/app/components/hr-admin/ProjectManagementClient";
 
 export default async function ProjectManagementPage({
   params,

@@ -87,7 +87,7 @@ export default function SystemOwnerLeftMenu({
     setLogoutError(null);
     try {
       await signOut({
-        callbackUrl: "/auth/super_admin",
+        callbackUrl: "/system-owner/auth/login",
       });
     } catch (error) {
       console.error(error);

@@ -5,6 +5,7 @@ Smart HR is a multi-tenant workforce operations platform built on Next.js 16. It
 ## Features
 
 - **Multi-tenant workspaces & RBAC** — Organizations, departments, teams, and rich role hierarchy (`SUPER_ADMIN` → `EMPLOYEE`) are modeled in `prisma/schema.prisma`.
+- **System Owner console & tenant guardrails** — Super admins get a dedicated `/system-owner` cockpit with org provisioning, cross-tenant dashboards, and TRPC guards (`requireSuperAdmin`) that hard-stop unauthorized users from viewing other tenants.
 - **Workforce analytics dashboard** — `server/modules/hr/dashboard` aggregates attendance, engagement, coverage, and policy adherence KPIs with timezone-aware scheduling.
 - **Attendance automation** — Remote vs onsite inference, lateness detection, shift policies, and granular logs reside in `server/modules/hr/attendance`.
 - **Leave & PTO management** — Submission, approval, attachment handling, and secure download tokens (see `server/modules/leave`) cover the full leave lifecycle.

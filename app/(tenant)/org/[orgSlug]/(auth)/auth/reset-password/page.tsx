@@ -1,10 +1,9 @@
 import { Suspense } from "react";
 import jwt, { JsonWebTokenError } from "jsonwebtoken";
 import { notFound } from "next/navigation";
-
+import { ResetPasswordClient } from "@/app/components/auth/ResetPasswordClient";
 import { canonicalizeTenantSlug } from "@/lib/tenant/routing";
 import { prisma } from "@/prisma";
-import { ResetPasswordClient } from "./ResetPasswordClient";
 
 export const dynamic = "force-dynamic";
 
