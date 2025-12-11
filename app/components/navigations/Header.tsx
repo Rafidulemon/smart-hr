@@ -49,7 +49,7 @@ function Header({tenantBrand}: TenantProps) {
       >
         <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl shadow-lg shadow-indigo-500/30">
           <Image
-            src="/logo/demo.logo.png"
+            src={tenantBrand?.logoUrl || "/logo/demo.logo.png"}
             alt="HR Management"
             width={36}
             height={36}
