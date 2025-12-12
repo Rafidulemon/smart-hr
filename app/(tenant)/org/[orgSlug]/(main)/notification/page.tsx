@@ -3,7 +3,6 @@
 import { ReactElement, useMemo, useState } from "react";
 import { IoEye } from "react-icons/io5";
 import { useRouter } from "next/navigation";
-
 import { trpc } from "@/trpc/client";
 import {
   getNotificationTypeLabel,
@@ -15,6 +14,7 @@ import Table from "@/app/components/atoms/tables/Table";
 import Pagination from "@/app/components/pagination/Pagination";
 import Button from "@/app/components/atoms/buttons/Button";
 import Text from "@/app/components/atoms/Text/Text";
+import { useTenantPaths } from "@/app/components/tenant/TenantProvider";
 
 const dateTimeFormatter = new Intl.DateTimeFormat("en-US", {
   dateStyle: "medium",
@@ -37,6 +37,7 @@ interface Row extends Record<string, string | number | ReactElement> {
 
 function NotificationPage() {
   const router = useRouter();
+  const { tenantPath } = useTenantPaths();
   const [filter, setFilter] = useState<FilterValue>("ALL");
   const [currentPageData, setCurrentPageData] = useState<Row[]>([]);
 
@@ -132,7 +133,7 @@ function NotificationPage() {
       router.push(target.actionUrl);
       return;
     }
-    router.push(`/notification/${id}`);
+    router.push(tenantPath(`/notification/${id}`));
   };
 
   const handleRetry = () => {
